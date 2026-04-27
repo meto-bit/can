@@ -31,9 +31,16 @@
         .hidden-page {
             display: none;
         }
-        /* Fluid Typography für die E-Mail Adresse */
         .fluid-email {
             font-size: clamp(0.75rem, 4vw, 1.5rem);
+        }
+        /* Animation für die Erfolgsmeldung */
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-up {
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
@@ -43,7 +50,6 @@
     <nav class="fixed top-0 w-full z-50 apple-blur border-b border-gray-100">
         <div class="max-w-7xl mx-auto px-6 h-24 flex items-center justify-between">
             
-            <!-- START LOGO BEREICH HEADER -->
             <div class="flex items-center">
                 <a href="javascript:void(0)" onclick="showPage('home')" class="flex items-center space-x-4">
                     <img src="CAN_Gebäudereinigung_Logo.svg" alt="CAN Gebäudereinigung Logo" class="h-16 w-auto">
@@ -54,7 +60,6 @@
                     </div>
                 </a>
             </div>
-            <!-- ENDE LOGO BEREICH HEADER -->
 
             <div class="hidden md:flex space-x-10 text-[13px] font-medium uppercase tracking-widest text-gray-400">
                 <a href="javascript:void(0)" onclick="showPage('home'); setTimeout(() => document.getElementById('services').scrollIntoView(), 100)" class="hover:text-blue-600 transition-colors">Leistungen</a>
@@ -68,6 +73,18 @@
         </div>
     </nav>
 
+    <!-- Erfolgsmeldung Overlay (Initial versteckt) -->
+    <div id="success-toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] hidden">
+        <div class="bg-gray-900 text-white px-8 py-4 rounded-3xl shadow-2xl flex items-center space-x-4 animate-slide-up">
+            <div class="bg-green-500 w-8 h-8 rounded-full flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <span class="font-medium">Anfrage wurde vorbereitet!</span>
+        </div>
+    </div>
+
     <!-- PAGE: HOME -->
     <div id="page-home">
         <header class="pt-56 pb-24 px-6 hero-gradient overflow-hidden">
@@ -80,10 +97,10 @@
                     Professionelle Reinigungslösungen für Privat und Gewerbe. <br> Zuverlässig. Gründlich. Flexibel.
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-5">
-                    <a href="#contact" class="bg-gray-900 text-white px-10 py-5 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all shadow-xl">
+                    <a href="javascript:void(0)" onclick="document.getElementById('contact').scrollIntoView()" class="bg-gray-900 text-white px-10 py-5 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all shadow-xl">
                         Kostenloses Angebot
                     </a>
-                    <a href="#services" class="px-10 py-5 rounded-full text-lg font-semibold text-blue-600 hover:bg-blue-50 transition-all">
+                    <a href="javascript:void(0)" onclick="document.getElementById('services').scrollIntoView()" class="px-10 py-5 rounded-full text-lg font-semibold text-blue-600 hover:bg-blue-50 transition-all">
                         Leistungen entdecken
                     </a>
                 </div>
@@ -103,7 +120,7 @@
                         <p class="text-gray-500 leading-relaxed mb-6">Die regelmäßige Pflege für Büros, Praxen und Privathaushalte.</p>
                         <span class="text-[11px] font-bold uppercase tracking-widest text-blue-600">Standard</span>
                     </div>
-                    <div class="bg-gray-50 p-12 rounded-[3rem] service-card">
+                    <div class="bg-gray-50 p-12 rounded-[3rem] service-card border border-blue-50">
                         <h3 class="text-2xl font-bold mb-4 tracking-tight text-gray-900">Büro- & Praxis</h3>
                         <p class="text-gray-500 leading-relaxed mb-6">Hygienische Reinigung für ein professionelles Arbeitsumfeld.</p>
                         <span class="text-[11px] font-bold uppercase tracking-widest text-blue-600">Gewerbe</span>
@@ -166,23 +183,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10 mb-16">
                         <div class="p-6 sm:p-10 bg-white/5 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-colors">
                             <span class="block text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4">Telefon</span>
-                            <a href="tel:+491737178468" class="text-xl sm:text-2xl font-bold tracking-tight hover:text-blue-400 transition-colors">+49 173 717 84 68</a>
+                            <a href="tel:+491737178468" class="text-xl sm:text-2xl font-bold tracking-tight hover:text-blue-400 transition-colors text-white">+49 173 717 84 68</a>
                         </div>
                         <div class="p-6 sm:p-10 bg-white/5 rounded-[2.5rem] border border-white/10 hover:bg-white/10 transition-colors">
                             <span class="block text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4">E-Mail</span>
-                            <!-- Spam-Schutz & Fix für Zeilenumbruch: whitespace-nowrap und fluid typography -->
-                            <a href="#" id="secure-mail-link" class="fluid-email font-bold tracking-tight text-blue-400 whitespace-nowrap transition-colors hover:opacity-80">haticecan932 [at] gmail.com</a>
+                            <a href="#" id="secure-mail-link" class="fluid-email font-bold tracking-tight text-blue-400 whitespace-nowrap transition-colors hover:opacity-80">metehan_bacak [at] hotmail.de</a>
                         </div>
                     </div>
+                    
+                    <!-- Formular mit funktionierendem Handler -->
                     <div class="bg-white text-gray-900 p-10 md:p-16 rounded-[3.5rem] text-left shadow-2xl">
                         <h3 class="text-2xl font-bold mb-8 tracking-tight">Nachricht senden</h3>
-                        <form class="space-y-6" onsubmit="event.preventDefault();">
+                        <form id="contact-form" class="space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <input type="text" placeholder="Name" class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
-                                <input type="email" placeholder="E-Mail" class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
+                                <input type="text" id="form-name" placeholder="Name" required class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
+                                <input type="email" id="form-email" placeholder="E-Mail" required class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none transition-all">
                             </div>
-                            <textarea placeholder="Was können wir für Sie tun?" class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none h-40"></textarea>
-                            <button class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20">
+                            <textarea id="form-message" placeholder="Was können wir für Sie tun?" required class="w-full bg-gray-50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-blue-600 outline-none h-40"></textarea>
+                            <button type="submit" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold text-lg hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 active:scale-[0.98]">
                                 Angebot anfordern
                             </button>
                         </form>
@@ -202,7 +220,7 @@
             </section>
             <section class="mb-10">
                 <h2 class="text-xl font-bold mb-4">Kontakt</h2>
-                <p class="text-gray-600 leading-relaxed">Telefon: +49 173 717 84 68<br>E-Mail: <span class="secure-mail-text whitespace-nowrap">haticecan932 [at] gmail.com</span></p>
+                <p class="text-gray-600 leading-relaxed">Telefon: +49 173 717 84 68<br>E-Mail: <span class="whitespace-nowrap">metehan_bacak [at] hotmail.de</span></p>
             </section>
             <div class="mt-20 text-blue-600 font-semibold cursor-pointer" onclick="showPage('home')">← Zurück zur Startseite</div>
         </div>
@@ -212,7 +230,9 @@
     <div id="page-datenschutz" class="hidden-page pt-48 pb-32 px-6 bg-white min-h-screen">
         <div class="max-w-3xl mx-auto">
             <h1 class="text-4xl font-bold mb-12 tracking-tight">Datenschutzerklärung</h1>
-            <p class="text-gray-600 mb-8">Wir nehmen den Schutz Ihrer Daten ernst...</p>
+            <p class="text-gray-600 mb-8 font-light leading-relaxed">
+                Wir nehmen den Schutz Ihrer persönlichen Daten sehr ernst. Personenbezogene Daten werden auf dieser Webseite nur im technisch notwendigen Umfang erhoben...
+            </p>
             <div class="mt-20 text-blue-600 font-semibold cursor-pointer" onclick="showPage('home')">← Zurück zur Startseite</div>
         </div>
     </div>
@@ -239,7 +259,6 @@
                 </div>
             </div>
             <div class="pt-12 border-t border-gray-50 flex flex-col md:flex-row justify-between text-[11px] font-medium text-gray-400 tracking-wide">
-                <!-- Google Maps Link laut Präferenz -->
                 <a href="https://www.google.com/maps/search/?api=1&query=Berliner+Str.+33,+21493+Schwarzenbek" target="_blank" class="hover:text-blue-600 transition-colors">Berliner Str. 33, 21493 Schwarzenbek</a>
                 <p class="mt-4 md:mt-0">&copy; <span id="current-year"></span> CAN Gebäudereinigung. Alle Rechte vorbehalten.</p>
             </div>
@@ -250,15 +269,49 @@
         // Automatisches Jahr im Footer
         document.getElementById('current-year').textContent = new Date().getFullYear();
 
-        // Spam-Schutz & Dynamischer Link für E-Mail
-        const user = "haticecan932";
-        const domain = "gmail.com";
-        const fullMail = user + "@" + domain;
+        // Spam-Schutz & E-Mail Variablen
+        const mailUser = "metehan_bacak";
+        const mailDomain = "hotmail.de";
+        const fullMailAddress = mailUser + "@" + mailDomain;
         
-        const mailLink = document.getElementById('secure-mail-link');
-        if (mailLink) {
-            mailLink.href = "mailto:" + fullMail;
-        }
+        // E-Mail Link im Kontaktbereich setzen
+        const secureLink = document.getElementById('secure-mail-link');
+        if (secureLink) secureLink.href = "mailto:" + fullMailAddress;
+
+        // FORMULAR-HANDLER
+        const contactForm = document.getElementById('contact-form');
+        const toast = document.getElementById('success-toast');
+
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Verhindert Neuladen der Seite
+
+            // Daten sammeln
+            const name = document.getElementById('form-name').value;
+            const email = document.getElementById('form-email').value;
+            const msg = document.getElementById('form-message').value;
+
+            // Betreff und Body für die E-Mail generieren
+            const subject = encodeURIComponent("Angebotsanfrage: " + name);
+            const body = encodeURIComponent(
+                "Name: " + name + "\n" +
+                "E-Mail: " + email + "\n\n" +
+                "Anfrage:\n" + msg
+            );
+
+            // Mailto-Link auslösen
+            window.location.href = "mailto:" + fullMailAddress + "?subject=" + subject + "&body=" + body;
+
+            // Erfolgsmeldung anzeigen
+            toast.classList.remove('hidden');
+            
+            // Formular zurücksetzen
+            contactForm.reset();
+
+            // Meldung nach 4 Sekunden wieder verstecken
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        });
 
         // Seitenwechsel-Logik
         function showPage(pageId) {
